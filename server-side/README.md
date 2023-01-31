@@ -48,7 +48,7 @@
   apt install screen
   ```
 
-## Now you can run the below code from the folder where you saved `endPoint.py`:
+## Now you can run the below code from the folder where you saved `endPoint.py` and Machine Learning Model:
   ```
   screen
   flask --app endPoint run --host=0.0.0.0
