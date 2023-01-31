@@ -1,4 +1,4 @@
-## To run `endPoint.py` on your server:
+## Configuration to run `endPoint.py` on your server:
 
 ### 1 - Check for <a href="https://www.python.org/">PYTHON</a> or install
   ```
