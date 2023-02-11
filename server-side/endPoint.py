@@ -1,9 +1,12 @@
 import tensorflow.keras as k
 
+print('Model Loading...')
 model = k.models.load_model('30epoche')
+print('Model Loaded!')
 
 from sklearn.feature_extraction.text import CountVectorizer
 from tensorflow.keras.preprocessing.text import Tokenizer
+import pandas as pd
 
 def create_char_vectorizer(input_array):
     to_characters = Tokenizer(char_level=True, oov_token='<OOV>', filters='\t\n')
@@ -14,7 +17,7 @@ def create_char_vectorizer(input_array):
 def create_word_vectorizer(input_array):
     word_vectorizer = CountVectorizer(
         stop_words=None,
-  #      min_df=5,
+        min_df=5,
         token_pattern=r'&\w+;|[:/&?=.\[\]\\]|%\w{2}|[-_\w\d]+',
         analyzer='word',
         max_features=500
@@ -22,6 +25,11 @@ def create_word_vectorizer(input_array):
     word_vectorizer.fit(input_array)
 
     return word_vectorizer
+
+dataForVector = pd.read_csv("dataForVector.csv")
+
+word_vectorizer = create_word_vectorizer(dataForVector['Domain'])
+char_vectorizer = create_char_vectorizer(dataForVector['Domain'])
 
 import numpy as np
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -36,9 +44,6 @@ def predict_url():
 
         input_data_array = np.array([siteToCheck["domain"]])
 
-        word_vectorizer = create_word_vectorizer(input_data_array)
-        char_vectorizer = create_char_vectorizer(input_data_array)
-
         word_tokenizer = word_vectorizer.build_tokenizer()
         char_tokenizer = char_vectorizer.texts_to_sequences(input_data_array)
 
@@ -52,3 +57,22 @@ def predict_url():
         return {"predict": str(prediction[0][0])}, 200
     
     return {"error": "Request must be JSON"}, 415
+
+myList = ["https://www.amazon.it/",	"http://www.cm-innovationlab.it:8080/Lengths.jsp?dato=142#test"]
+
+@myEndPoint.route("/add",methods = ['POST'])
+def add():
+    if request.is_json:
+        siteToAdd = request.get_json()
+		
+        myList.append(siteToAdd["add"])
+
+        return {"myList": myList}, 200
+    
+    return {"error": "Request must be JSON"}, 415
+
+@myEndPoint.route("/myList",methods = ['GET'])
+def getMyList():
+    return {"myList": myList}, 200
+
+print('App Loaded!')
