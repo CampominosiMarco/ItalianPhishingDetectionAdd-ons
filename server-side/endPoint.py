@@ -64,9 +64,7 @@ myList = ["https://www.amazon.it/",	"http://www.cm-innovationlab.it:8080/Lengths
 def add():
     if request.is_json:
         siteToAdd = request.get_json()
-		
         myList.append(siteToAdd["add"])
-
         return {"myList": myList}, 200
     
     return {"error": "Request must be JSON"}, 415
