@@ -1,0 +1,9 @@
+{
+    "predict": "0.111111111"
+}
+{
+    "error": "Request must be JSON"
+}
+{
+    "myList": "['https://www.amazon.it/',	'http://www.cm-innovationlab.it:8080/Lengths.jsp?dato=142#test']"
+}
