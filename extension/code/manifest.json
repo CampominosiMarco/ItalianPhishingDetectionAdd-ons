@@ -1,13 +1,13 @@
 {
 	"manifest_version": 2,
-    "name": "Italian Phishing Machine Learning Model Add-Ons",
+    "name": "Italian Phishing Detection",
     "version": "1.0",
     "description": "This Add-ons was developed by Marco Campominosi for an Experimental Thesis at Guglielmo Marconi University (https://www.unimarconi.it/). Speaker Prof. Petito with the use of Machine Learning model developed by Dr. Ranaldi.",
 
 
     "icons": {
-        "48": "images/logo.png",
-        "96": "images/logo.png"
+        "48": "images/logo(48px).png",
+        "96": "images/logo(96px).png"
       },
 
 
