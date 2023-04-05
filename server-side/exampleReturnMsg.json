@@ -5,5 +5,12 @@
     "error": "Request must be JSON"
 }
 {
-    "myList": "['https://www.amazon.it/',	'http://www.cm-innovationlab.it:8080/Lengths.jsp?dato=142#test']"
+    "reliableList": "['google.it',	'cm-innovationlab.it']"
+}
+{
+    "maliciousList": "['google.com',	'cm-innovationlab.com']"
+}
+{
+    "reliableList": "['google.it',	'cm-innovationlab.it']",
+    "maliciousList": "['google.com',	'cm-innovationlab.com']"
 }
