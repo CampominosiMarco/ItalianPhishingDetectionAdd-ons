@@ -1,3 +1,18 @@
+
+//https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/browser_action
+
+
+function openPage() {
+	browser.tabs.create({
+		url: "https://github.com/CampominosiMarco/ItalianPhishingDetectionAdd-ons",
+	});
+}
+
+browser.browserAction.onClicked.addListener(openPage);
+
+
+
+
 //For more info:
 //		https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/background
 //		https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/onHeadersReceived
@@ -6,9 +21,9 @@
 
 var myArrayListFromJson = [];	//This is array containing my "white pages"
 var myfilter = "<all_urls>";	//This is default filter, it blocks all urls
-const WL_URL ="http://www.cm-innovationlab.it:5000/myList";		//This is the API on my website to get "white list"
+const WL_URL ="http://www.cm-innovationlab.it:5000/api/v2/list/reliable";		//This is the API on my website to get "white list"
 
-function initializeMyList(){
+function initializeReliableList(){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open('GET', WL_URL, true);
 
@@ -16,7 +31,7 @@ function initializeMyList(){
         if (this.readyState == 4 && this.status == 200) {
 			
 			var obj = JSON.parse(xmlhttp.response);
-			myArrayListFromJson = obj.myList;
+			myArrayListFromJson = obj.reliableList;
             
         }else if (this.status >= 500) {
 			console.log("[SERVER ERROR]:" + xmlhttp.response);
@@ -34,10 +49,10 @@ function initializeMyList(){
 function logURL(headerDetails) {	//This is callback of listener
 
 	if (myArrayListFromJson.length === 0){
-		initializeMyList();	//First of all is necessary to get my personal authorized list
+		initializeReliableList();	//First of all is necessary to get my personal authorized list
 	}
 
-	if (myArrayListFromJson.includes(headerDetails.url)){
+	if (myArrayListFromJson.includes(headerDetails.url.split("://")[1].split("/")[0].split(":")[0].replace("www.", ""))){	//Extract only domain without www.
 
 		myfilter = "";	//If url is included in our list is necessary to set an empty filter because is impossible to exclude it from <all_urls>
 

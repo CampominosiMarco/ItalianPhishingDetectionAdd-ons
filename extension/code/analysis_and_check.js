@@ -11,10 +11,11 @@
 //                                                        #test
 
 
-//First of all is important to understand if current url is already in my list, so we get it.
-var myArrayListFromJson = [];
+//First of all is important to understand if current url is already in my reliable list, so we get it.
+var myArrayReliableListFromJson = [];
+var myArrayMalicoiusListFromJson = [];
 
-const WL_URL ="http://www.cm-innovationlab.it:5000/myList";		//This is the API on my website to get "white list"
+const WL_URL ="http://www.cm-innovationlab.it:5000/api/v2/list/reliable";		//This is the API on my website to get "white list"
 
 var xmlhttp = new XMLHttpRequest();
 xmlhttp.open('GET', WL_URL, true);
@@ -24,7 +25,7 @@ xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
         
         var obj = JSON.parse(xmlhttp.response);
-        myArrayListFromJson = obj.myList;
+        myArrayReliableListFromJson = obj.reliableList;
 
         proceed();      //Once array is populated analysis can start
         
@@ -54,7 +55,7 @@ class AnalysisData {
     }
 }
 
-const ML_URL ="http://www.cm-innovationlab.it:5000/mlcheck";		//This is the API on my website
+const ML_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/inference";		//This is the API on my website
 
 //Variables necessary for reload
 var predictionStorage = [];
@@ -127,9 +128,9 @@ function populateArray(){
 function reload(){
 
     var result = ((predictionStorage[0] + predictionStorage[1] + predictionStorage[2]) / 3);
-    if(result < 0.4){
+    if(result < 0.45){
 
-        const ADD_URL ="http://www.cm-innovationlab.it:5000/add";		//This is the API on my website to add new page in "white list"
+        const ADD_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/add";		//This is the API on my website to add new page in "white list"
 
         var xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', ADD_URL, true);
@@ -139,13 +140,13 @@ function reload(){
             if (this.readyState == 4 && this.status == 200) {
                 
                 var obj = JSON.parse(xmlhttp.response);
-                myArrayListFromJson = obj.myList;
+                myArrayReliableListFromJson = obj.reliableList;
     
                 alert("Restarting your browser you can see correctly this page.");
 
                 document.head.innerHTML = originalHead;
                 document.body.innerHTML = originalBody;
-                
+
             }else if (this.status >= 500) {
                 console.log("[SERVER ERROR]:" + xmlhttp.response);
             }else if (this.status >= 400) {
@@ -156,19 +157,51 @@ function reload(){
             console.log(xmlhttp.error);
         };
         xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(JSON.stringify({ "add": window.location.href }));
+        xmlhttp.send(JSON.stringify({ "add": window.location.hostname.replace("www.", "") }));
     }else{
         alert("Results average [" + result + "] is greater than 0.40, so you can't identify this url as 'safe'.");
     }
 }
 
+//With this function we add site to blackList
 function report(){
-    alert("You can implement this function as you want.\nFor example with XmlHttpRequest you can send notification to www.acn.gov.it.");
+
+    var result = ((predictionStorage[0] + predictionStorage[1] + predictionStorage[2]) / 3);
+    if(result > 0.70){
+
+        const BAD_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/bad";		//This is the API on my website to add new page in "black list"
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', BAD_URL, true);
+    
+        xmlhttp.onreadystatechange = function() {
+    
+            if (this.readyState == 4 && this.status == 200) {
+                
+                var obj = JSON.parse(xmlhttp.response);
+                myArrayMalicoiusListFromJson = obj.maliciousList;
+
+                alert("You can implement this function as you want.\nFor example with XmlHttpRequest you can send notification to www.acn.gov.it.");
+
+            }else if (this.status >= 500) {
+                console.log("[SERVER ERROR]:" + xmlhttp.response);
+            }else if (this.status >= 400) {
+                console.log("[CLIENT ERROR]:" + xmlhttp.response);
+            }
+        };
+        xmlhttp.onerror = function() {
+            console.log(xmlhttp.error);
+        };
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.send(JSON.stringify({ "add": window.location.hostname.replace("www.", "") }));
+    }else{
+        alert("Results average [" + result + "] is less than 0.70, so you can't identify this url as 'malicious'.");
+    }
 }
 
 //This is the main function with which we can hide original page and check url
 function proceed(){
-    if (!myArrayListFromJson.includes(window.location.href)){   //Only if url isn't in our list
+    if (!myArrayReliableListFromJson.includes(window.location.hostname.replace("www.", ""))){   //Only if domain isn't in our list
 
         populateArray();    //We start analyzing current url
         
@@ -179,14 +212,37 @@ function proceed(){
                                             "<title>Machine Learning Predict Page</title>" +
                                             "<link rel='stylesheet' href='" + browser.runtime.getURL('style.css') + "'>" +
                                         "</head>";
-        
+
         //Create a new body
-        var myTempBody =    "<div>" +
+        var myTempBody =    
+        
+                            "<div class='topnav'>" +
+                              //  "<a class='active' href='#home'>Home</a>" +
+                                "<a href='https://ceur-ws.org/Vol-3260/paper13.pdf'>Paper</a>" +
+                                "<a href='https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb'>Prof. Ranaldi ML Model</a>" +
+                                "<a href='http://www.cm-innovationlab.it:5000/api/v2/list/reliable'>Json OK list</a>" +
+                                "<a href='http://www.cm-innovationlab.it:5000/api/v2/list/malicious'>Json KO list</a>" +
+                                "<a href='http://www.cm-innovationlab.it:5000/api/v2/list/all'>Json complete list</a>" +
+                                "<a href='https://support.mozilla.org/en-US/kb/block-deceptive-content-and-dangerous-downloads-firefox'>Firefox Privacy Settings</a>" +
+                                "<a href='' id='falsePositive'>Notify False Positive</a>" +
+
+
+
+                            "</div>" +
+
+//https://reference.codeproject.com/dom/xmlhttprequest/how_to_check_the_secruity_state_of_an_xmlhttprequest_over_ssl
+
+
+                            "</br>" +
+
+                            "<div>" +
                                 "<img id='logo_access_denied' alt='NoAccessDeniedLogo' src='" + browser.runtime.getURL('images/accessDenied.png') + "'/>" +
                                 "<span id='span_access_denied'>  Page Blocked awaiting verification:</span>" +
                             "</div>" +
         
                             "</br>" +
+
+                            "<h1>Lightweight URL-based phishing detection (Section 2.1)</h1>" +
         
                             "<table>" +
                                 "<tr>" +
@@ -234,5 +290,41 @@ function proceed(){
         //Listener are necessary because all scripts are blocked. This is the easiest way.
         document.getElementById("btnok").addEventListener("click", reload);
         document.getElementById("btnko").addEventListener("click", report);
+
+
+        //Listener to notify False Positive Domain
+        function notFalse(){
+            const CORRECTION_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/correction";		//This is the API on my website to add new page in "white list"
+    
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open('POST', CORRECTION_URL, true);
+        
+            xmlhttp.onreadystatechange = function() {
+        
+                if (this.readyState == 4 && this.status == 200) {
+                    
+                    var obj = JSON.parse(xmlhttp.response);
+                    myArrayReliableListFromJson = obj.reliableList;
+                    myArrayMalicoiusListFromJson = obj.maliciousList;
+        
+                    alert("Restarting your browser you can see correctly this page.");
+    
+                    document.head.innerHTML = originalHead;
+                    document.body.innerHTML = originalBody;
+    
+                }else if (this.status >= 500) {
+                    console.log("[SERVER ERROR]:" + xmlhttp.response);
+                }else if (this.status >= 400) {
+                    console.log("[CLIENT ERROR]:" + xmlhttp.response);
+                }
+            };
+            xmlhttp.onerror = function() {
+                console.log(xmlhttp.error);
+            };
+            xmlhttp.setRequestHeader("Content-Type", "application/json");
+            xmlhttp.send(JSON.stringify({ "add": window.location.hostname.replace("www.", "") }));
+        }
+
+        document.getElementById("falsePositive").addEventListener("click", notFalse);
     }
 }
