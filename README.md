@@ -6,6 +6,6 @@ Firefox add-ons for phishing detection using Machine Learning Model:
 .:. To add URL in white list @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/url/add">/api/v2/url/add</a></br>
 .:. To add URL in black list @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/url/bad">/api/v2/url/bad</a></br>
 .:. To correct a false positive URL from black to white list @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/url/correction">/api/v2/url/correction</a></br>
-.:. To get array containing white list of domain @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/list/reliable">/api/v2/list/reliable</a></br>
-.:. To get array containing black list of domain @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/list/malicious">/api/v2/list/malicious</a></br>
-.:. To get array containing black / white list of domain @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/list/all">/api/v2/list/all</a>
+.:. To get JSON array containing white list of domain @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/list/reliable">/api/v2/list/reliable</a></br>
+.:. To get JSON array containing black list of domain @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/list/malicious">/api/v2/list/malicious</a></br>
+.:. To get JSON arrays containing black / white list of domain @ <a target="_blank" href="http://www.cm-innovationlab.it:5000/api/v2/list/all">/api/v2/list/all</a>
