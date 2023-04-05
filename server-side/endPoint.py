@@ -37,7 +37,7 @@ from flask import Flask, request
 
 myEndPoint = Flask(__name__)
 
-@myEndPoint.route("/mlcheck",methods = ['POST'])
+@myEndPoint.route("/api/v2/url/inference",methods = ['POST'])
 def predict_url():
     if request.is_json:
         siteToCheck = request.get_json()
@@ -58,19 +58,56 @@ def predict_url():
     
     return {"error": "Request must be JSON"}, 415
 
-myList = ["https://www.amazon.it/",	"http://www.cm-innovationlab.it:8080/Lengths.jsp?dato=142#test"]
+reliableList = ["google.it", "google.com", "github.com", "webstudenti.unimarconi.it", "cm-innovationlab.it"]
 
-@myEndPoint.route("/add",methods = ['POST'])
+maliciousList = []
+
+@myEndPoint.route("/api/v2/url/add",methods = ['POST'])
 def add():
     if request.is_json:
         siteToAdd = request.get_json()
-        myList.append(siteToAdd["add"])
-        return {"myList": myList}, 200
+
+        if siteToAdd["add"] not in reliableList and siteToAdd["add"] not in maliciousList:
+            reliableList.append(siteToAdd["add"])
+
+        return {"reliableList": reliableList}, 200
+    
+    return {"error": "Request must be JSON"}, 415
+    
+@myEndPoint.route("/api/v2/url/bad",methods = ['POST'])
+def bad():
+    if request.is_json:
+        siteToAdd = request.get_json()
+        
+        if siteToAdd["add"] not in maliciousList and siteToAdd["add"] not in reliableList:
+            maliciousList.append(siteToAdd["add"])
+
+        return {"maliciousList": maliciousList}, 200
     
     return {"error": "Request must be JSON"}, 415
 
-@myEndPoint.route("/myList",methods = ['GET'])
-def getMyList():
-    return {"myList": myList}, 200
+@myEndPoint.route("/api/v2/url/correction",methods = ['POST'])
+def correction():
+    if request.is_json:
+        siteToAdd = request.get_json()
+
+        reliableList.append(siteToAdd["add"])
+        maliciousList.remove(siteToAdd["add"])
+
+        return {"reliableList": reliableList, "maliciousList": maliciousList}, 200
+    
+    return {"error": "Request must be JSON"}, 415
+
+@myEndPoint.route("/api/v2/list/reliable",methods = ['GET'])
+def getReliableList():
+    return {"reliableList": reliableList}, 200
+
+@myEndPoint.route("/api/v2/list/malicious",methods = ['GET'])
+def getMaliciousList():
+    return {"maliciousList": maliciousList}, 200
+    
+@myEndPoint.route("/api/v2/list/all",methods = ['GET'])
+def getAllLists():
+    return {"reliableList": reliableList, "maliciousList": maliciousList}, 200
 
 print('App Loaded!')
