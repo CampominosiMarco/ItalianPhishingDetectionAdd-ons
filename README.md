@@ -8,4 +8,5 @@ Firefox add-ons for phishing detection using Machine Learning Model:
 .:. To correct a false positive URL from black to white list @ <a href="http://www.cm-innovationlab.it:5000/api/v2/url/correction">/api/v2/url/correction</a></br>
 .:. To get JSON array containing white list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/reliable">/api/v2/list/reliable</a></br>
 .:. To get JSON array containing black list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/malicious">/api/v2/list/malicious</a></br>
-.:. To get JSON arrays containing black / white list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/all">/api/v2/list/all</a>
+.:. To get JSON array containing false positive list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/fp">/api/v2/list/fp</a></br>
+.:. To get JSON arrays containing black / white / false positive list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/all">/api/v2/list/all</a>
