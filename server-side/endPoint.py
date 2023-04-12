@@ -62,6 +62,8 @@ reliableList = ["google.it", "google.com", "github.com", "webstudenti.unimarconi
 
 maliciousList = []
 
+falsePositiveList = []
+
 @myEndPoint.route("/api/v2/url/add",methods = ['POST'])
 def add():
     if request.is_json:
@@ -93,6 +95,7 @@ def correction():
 
         reliableList.append(siteToAdd["add"])
         maliciousList.remove(siteToAdd["add"])
+        falsePositiveList.append(siteToAdd["add"])
 
         return {"reliableList": reliableList, "maliciousList": maliciousList}, 200
     
@@ -108,6 +111,10 @@ def getMaliciousList():
     
 @myEndPoint.route("/api/v2/list/all",methods = ['GET'])
 def getAllLists():
-    return {"reliableList": reliableList, "maliciousList": maliciousList}, 200
+    return {"reliableList": reliableList, "maliciousList": maliciousList, "falsePositiveList": falsePositiveList}, 200
+	
+@myEndPoint.route("/api/v2/list/fp",methods = ['GET'])
+def getFalsePositiveList():
+    return {"falsePositiveList": falsePositiveList}, 200
 
 print('App Loaded!')
