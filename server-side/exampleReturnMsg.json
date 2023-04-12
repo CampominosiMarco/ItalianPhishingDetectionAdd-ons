@@ -11,6 +11,10 @@
     "maliciousList": "['google.com',	'cm-innovationlab.com']"
 }
 {
+    "falsePositiveList": "['google.it',	'cm-innovationlab.it']"
+}
+{
     "reliableList": "['google.it',	'cm-innovationlab.it']",
-    "maliciousList": "['google.com',	'cm-innovationlab.com']"
+    "maliciousList": "['google.com',	'cm-innovationlab.com']",
+    "falsePositiveList": "['google.it',	'cm-innovationlab.it']"
 }
