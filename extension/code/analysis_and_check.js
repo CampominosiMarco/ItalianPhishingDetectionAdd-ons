@@ -10,38 +10,11 @@
 //                                               ?dato=451
 //                                                        #test
 
+//First of all is important to understand if current url is already in my reliable list, so we update lists
+downloadAllLists();
+responseTime();
 
-//First of all is important to understand if current url is already in my reliable list, so we get it.
-var myArrayReliableListFromJson = [];
-var myArrayMalicoiusListFromJson = [];
-
-const WL_URL ="http://www.cm-innovationlab.it:5000/api/v2/list/reliable";		//This is the API on my website to get "white list"
-
-var xmlhttp = new XMLHttpRequest();
-xmlhttp.open('GET', WL_URL, true);
-
-xmlhttp.onreadystatechange = function() {
-
-    if (this.readyState == 4 && this.status == 200) {
-        
-        var obj = JSON.parse(xmlhttp.response);
-        myArrayReliableListFromJson = obj.reliableList;
-
-        proceed();      //Once array is populated analysis can start
-        
-    }else if (this.status >= 500) {
-        console.log("[SERVER ERROR]:" + xmlhttp.response);
-    }else if (this.status >= 400) {
-        console.log("[CLIENT ERROR]:" + xmlhttp.response);
-    }
-};
-xmlhttp.onerror = function() {
-    console.log(xmlhttp.error);
-};
-xmlhttp.setRequestHeader("Content-Type", "application/json");
-xmlhttp.send();
-
-//In the second instance we save the original site
+//We save the original site
 const originalHead = document.head.innerHTML;
 const originalBody = document.body.innerHTML;
 
@@ -53,57 +26,6 @@ class AnalysisData {
         this.description = description;
         this.value = value;
     }
-}
-
-const ML_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/inference";		//This is the API on my website
-
-//Variables necessary for reload
-var predictionStorage = [];
-
-//Function for check URL using Web API
-function checkUrl(predictionArgument, destination, numberOfPrediction){
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', ML_URL, true);
-
-    xmlhttp.onreadystatechange = function() {
-        var output = "";
-        if (this.readyState == 4 && this.status == 200) {
-			
-			var obj = JSON.parse(xmlhttp.response);
-			var prediction = parseFloat(obj.predict);
-
-            predictionStorage[numberOfPrediction] = prediction;
-			
-            output =    "<table>" +
-                            "<tr>";
-			if (prediction <= 0.50){
-
-                output +=       "<td><img id='check_img' alt='NoGreenTick' src='" + browser.runtime.getURL('images/green.png') + "'/></td>" +
-                                "<td>" + prediction + "</td>";
-
-			}else if (prediction <= 0.70){
-                output +=       "<td><img id='check_img' alt='NoOrangeTick' src='" + browser.runtime.getURL('images/orange.png') + "'/></td>" +
-                                "<td>" + prediction + "</td>";
-			}else{
-                output +=       "<td><img id='check_img' alt='NoRedTick' src='" + browser.runtime.getURL('images/red.png') + "'/></td>" +
-                                "<td>" + prediction + "</td>";
-			}
-
-            output +=       "</tr>" +
-                        "</table>";
-            
-        }else if (this.status >= 500) {
-            output = "<b>SERVER ERROR:</b> " + xmlhttp.response;
-        }else if (this.status >= 400) {
-            output = "<b>CLIENT ERROR:</b> " + xmlhttp.response;
-        }
-        document.getElementById(destination).innerHTML = output;
-    };
-    xmlhttp.onerror = function() {
-        console.log(xmlhttp.error);
-    };
-	xmlhttp.setRequestHeader("Content-Type", "application/json");
-    xmlhttp.send(JSON.stringify({ "domain": predictionArgument }));
 }
 
 //This function help us to store information about window location 
@@ -124,207 +46,258 @@ function populateArray(){
     myAnalysisArray.push(new AnalysisData("Anchor / Fragment", window.location.hash));
 }
 
-//With this function we add site to whiteList so (after restarting browser) this is visible
-function reload(){
+//This is the domain name
+var domainOnly = window.location.hostname.replace("www.", "");
 
-    var result = ((predictionStorage[0] + predictionStorage[1] + predictionStorage[2]) / 3);
-    if(result < 0.45){
-
-        const ADD_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/add";		//This is the API on my website to add new page in "white list"
-
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open('POST', ADD_URL, true);
+populateArray();    //We start analyzing current url
     
-        xmlhttp.onreadystatechange = function() {
-    
-            if (this.readyState == 4 && this.status == 200) {
-                
-                var obj = JSON.parse(xmlhttp.response);
-                myArrayReliableListFromJson = obj.reliableList;
-    
-                alert("Restarting your browser you can see correctly this page.");
+//Create a header
+var extensionHeader = 	    "<!DOCTYPE html>" +
+                            "<html>" +
+                                "<head>" +
+                                    "<title>Machine Learning Predict Page</title>" +
+                                    "<link rel='stylesheet' href='" + browser.runtime.getURL('style.css') + "'>" +
+                                "</head>";
 
-                document.head.innerHTML = originalHead;
-                document.body.innerHTML = originalBody;
+//Create a menu
+var extensionMenu = "<div class='topnav'>" +
+                        "<a href='" + PAPER + "'>Paper</a>" +
+                        "<a href='" + RANALDI_MODEL + "'>Prof. Ranaldi ML Model</a>" +
+                        "<a href='" + RELIABLE_API + "'>Reliable list (JSON)</a>" +
+                        "<a href='" + MALICIOUS_API + "'>Malicious list (JSON)</a>" +
+                        "<a href='" + ALL_API + "'>All lists (JSON)</a>" +
+                        "<a href='" + FIREFOX_PRIVACY_SETTINGS + "'>Firefox Privacy Settings</a>" +
+                        "<a href='" + FIREFOX_FILE_TYPES_BEHAVIOR + "'>Firefox File Types Behavior</a>" +
+                    "</div>";
 
-            }else if (this.status >= 500) {
-                console.log("[SERVER ERROR]:" + xmlhttp.response);
-            }else if (this.status >= 400) {
-                console.log("[CLIENT ERROR]:" + xmlhttp.response);
-            }
-        };
-        xmlhttp.onerror = function() {
-            console.log(xmlhttp.error);
-        };
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(JSON.stringify({ "add": window.location.hostname.replace("www.", "") }));
+//Create a main title
+var extensionTitle1 = "<div>" +
+                        "<img id='logo_access_denied' alt='NoAccessDeniedLogo' src='" + browser.runtime.getURL('images/accessDenied.png') + "'/>" +
+                        "<span id='span_access_denied'>  Page Blocked awaiting verification:</span>" +
+                    "</div>";
+
+var extensionTitle2 = "<div>" +
+                        "<img id='logo_access_denied' alt='NoAccessDeniedLogo' src='" + browser.runtime.getURL('images/accessDenied.png') + "'/>" +
+                        "<span id='span_access_denied'>  Page Blocked: Malicious Domain!</span>" +
+                    "</div>";
+
+//Create a table
+var extensionTable = "<h1>Lightweight URL-based phishing detection (Section 2.1)</h1>" +
+    
+                    "<table>" +
+                        "<tr>" +
+                            "<th>Description</th>" +
+                            "<th>Value</th>" +
+                        "</tr>";
+
+for (index = 0; index < myAnalysisArray.length; index++){
+    extensionTable += 	"<tr>" +
+                            "<td><b>" + myAnalysisArray[index].description + "</b></td>" +
+                            "<td>" + myAnalysisArray[index].value + "</td>" +
+                        "</tr>";
+}
+
+extensionTable += 		"</table>";
+
+//Create a domainCheck with button
+var extensionCheck =    "<b>Domain Name Check</b> (" + domainOnly + ")" +
+                        "<br/><br/>" +
+                        "<div id='checkResponse'></div>" +
+                        "<br/><br/>" +
+
+                        "<button class='ok' id='btnok' title='If you are sure, you can add this domain as reliable.'>Add as Reliable</button>" +
+                        "<button class='fp' id='btnfp' title='With this button you can report a FALSE POSITIVE domain!'>Report as False Positive</button>" +
+                        "<button class='ko' id='btnko' title='With this button you can report a malicious domain!'>Report as Malicious</button>";
+
+//This is the main function with which we can hide original page and check url
+function worstOption(type){
+
+    //Create a new header
+    document.head.innerHTML = extensionHeader;
+
+    var title = "";
+    if (type == "malicious"){
+        title = extensionTitle2;
+    }else if (type == "prediction"){
+        title = extensionTitle1;
+    }
+
+    //Create a new body
+    document.body.innerHTML =    extensionMenu +
+
+                                "</br></br>" +
+
+                                title +
+
+                                "</br>" +
+
+                                extensionTable +
+
+                                "<br/><br/><br/>" +
+
+                                extensionCheck +
+
+                                "<br/><br/><br/>" +
+                                "</html>";
+    
+    document.getElementById("btnok").style.display = "none";
+    document.getElementById("btnfp").style.display = "none";
+    document.getElementById("btnko").style.display = "none";
+
+    
+    //Listener are necessary because all scripts are blocked. This is the easiest way.
+    document.getElementById("btnok").addEventListener("click", reportAsSafe);
+    document.getElementById("btnfp").addEventListener("click", falsePositive);
+    document.getElementById("btnko").addEventListener("click", reportAsMalicious);
+
+}
+
+//This is the minor option
+function minorOption(){
+
+    //Create a new header
+    document.head.innerHTML = extensionHeader;
+
+    //Create a new body
+    document.body.innerHTML =    extensionMenu +
+
+                                "</br></br>" +
+
+                                "<h1>This page is not included yet in reliable list, do you want to add it?</h1>" +
+            
+                                "<br/>" +
+
+                                extensionCheck +
+
+                                "<br/><br/><br/>" +
+                                "</html>";
+    
+    document.getElementById("btnok").style.display = "none";
+    document.getElementById("btnfp").style.display = "none";
+    document.getElementById("btnko").style.display = "none";
+
+    
+    //Listener are necessary because all scripts are blocked. This is the easiest way.
+    document.getElementById("btnok").addEventListener("click", reportAsSafe);
+    document.getElementById("btnfp").addEventListener("click", falsePositive);
+    document.getElementById("btnko").addEventListener("click", reportAsMalicious);
+
+}
+
+//With this function we add site to whiteList
+function reportAsSafe(){
+    if(prediction < 0.70){
+        notifyReliableDomain(domainOnly);
+        alert("Domain correctly identified as 'safe'.");
+        window.location.reload();  
     }else{
-        alert("Results average [" + result + "] is greater than 0.40, so you can't identify this url as 'safe'.");
+        alert("Results is greater than 0.70, so you can't identify this url as 'safe'.");
     }
 }
 
 //With this function we add site to blackList
-function report(){
-
-    var result = ((predictionStorage[0] + predictionStorage[1] + predictionStorage[2]) / 3);
-    if(result > 0.70){
-
-        const BAD_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/bad";		//This is the API on my website to add new page in "black list"
-
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open('POST', BAD_URL, true);
-    
-        xmlhttp.onreadystatechange = function() {
-    
-            if (this.readyState == 4 && this.status == 200) {
-                
-                var obj = JSON.parse(xmlhttp.response);
-                myArrayMalicoiusListFromJson = obj.maliciousList;
-
-                alert("You can implement this function as you want.\nFor example with XmlHttpRequest you can send notification to www.acn.gov.it.");
-
-            }else if (this.status >= 500) {
-                console.log("[SERVER ERROR]:" + xmlhttp.response);
-            }else if (this.status >= 400) {
-                console.log("[CLIENT ERROR]:" + xmlhttp.response);
-            }
-        };
-        xmlhttp.onerror = function() {
-            console.log(xmlhttp.error);
-        };
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.send(JSON.stringify({ "add": window.location.hostname.replace("www.", "") }));
+function reportAsMalicious(){
+    if(prediction > 0.50){
+        notifyMaliciousDomain(domainOnly);
+        alert("Domain correctly identified as 'malicious'.");
+        window.location.reload();
     }else{
-        alert("Results average [" + result + "] is less than 0.70, so you can't identify this url as 'malicious'.");
+        alert("Results is less than 0.50, so you can't identify this url as 'malicious'.");
     }
 }
 
-//This is the main function with which we can hide original page and check url
-function proceed(){
-    if (!myArrayReliableListFromJson.includes(window.location.hostname.replace("www.", ""))){   //Only if domain isn't in our list
+//With this function we correct url from malicious to reliable list (only if prediction >0.70)
+function falsePositive(){
+    correctionFromMaliciousToReliable(domainOnly);
+    alert("Domain correctly identified as 'false positive'.");
+    window.location.reload();
+}
 
-        populateArray();    //We start analyzing current url
-        
-        //Create a new header
-        document.head.innerHTML = 	"<!DOCTYPE html>" +
-                                    "<html>" +
-                                        "<head>" +
-                                            "<title>Machine Learning Predict Page</title>" +
-                                            "<link rel='stylesheet' href='" + browser.runtime.getURL('style.css') + "'>" +
-                                        "</head>";
+//Now we get prediction
+var prediction;
+var resultTable = "";
+inference(domainOnly);
+responseTime();
 
-        //Create a new body
-        var myTempBody =    
-        
-                            "<div class='topnav'>" +
-                              //  "<a class='active' href='#home'>Home</a>" +
-                                "<a href='https://ceur-ws.org/Vol-3260/paper13.pdf'>Paper</a>" +
-                                "<a href='https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb'>Prof. Ranaldi ML Model</a>" +
-                                "<a href='http://www.cm-innovationlab.it:5000/api/v2/list/reliable'>Json OK list</a>" +
-                                "<a href='http://www.cm-innovationlab.it:5000/api/v2/list/malicious'>Json KO list</a>" +
-                                "<a href='http://www.cm-innovationlab.it:5000/api/v2/list/all'>Json complete list</a>" +
-                                "<a href='https://support.mozilla.org/en-US/kb/block-deceptive-content-and-dangerous-downloads-firefox'>Firefox Privacy Settings</a>" +
-                                "<a href='' id='falsePositive'>Notify False Positive</a>" +
+function inference(predictionArgument){
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('POST', INFERENCE_API, true);
 
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+			
+			var obj = JSON.parse(xmlhttp.response);
+			prediction = parseFloat(obj.predict);
 
-
-                            "</div>" +
-
-//https://reference.codeproject.com/dom/xmlhttprequest/how_to_check_the_secruity_state_of_an_xmlhttprequest_over_ssl
-
-
-                            "</br>" +
-
-                            "<div>" +
-                                "<img id='logo_access_denied' alt='NoAccessDeniedLogo' src='" + browser.runtime.getURL('images/accessDenied.png') + "'/>" +
-                                "<span id='span_access_denied'>  Page Blocked awaiting verification:</span>" +
-                            "</div>" +
-        
-                            "</br>" +
-
-                            "<h1>Lightweight URL-based phishing detection (Section 2.1)</h1>" +
-        
-                            "<table>" +
-                                "<tr>" +
-                                    "<th>Description</th>" +
-                                    "<th>Value</th>" +
-                                "</tr>";
-        
-        for (index = 0; index < myAnalysisArray.length; index++){
-            myTempBody += 		"<tr>" +
-                                    "<td><b>" + myAnalysisArray[index].description + "</b></td>" +
-                                    "<td>" + myAnalysisArray[index].value + "</td>" +
-                                "</tr>";
-        }
-        
-        myTempBody += 		"</table>" +
-        
-                            "<br/><br/><br/>" +
-        
-                            "<b>Location Check</b> (" + window.location.href + ")" +
-                            "<br/><br/>" +
-                            "<div id='checkResponse0'>Response 0</div>" +
-                            "<br/>" +
-                            "<b>Origin Check</b> (" + window.location.origin + ")" +
-                            "<br/><br/>" +
-                            "<div id='checkResponse1'>Response 1</div>" +
-                            "<br/>" +
-                            "<b>Domain Name Check</b> (" + window.location.hostname + ")" +
-                            "<br/><br/>" +
-                            "<div id='checkResponse2'>Response 2</div>" +
-        
-                            "<br/><br/>" +
-        
-                            "<button class='ok' id='btnok'>Add & Reload</button>" +
-                            "<button class='ko' id='btnko'>Report</button>" +
-        
-                            "<br/><br/><br/>";
-        
-        document.body.innerHTML = myTempBody + "</html>";
-        
-        //Populate div component with XmlHttpRequest
-        checkUrl(window.location.href, 'checkResponse0', 0);
-        checkUrl(window.location.origin, 'checkResponse1', 1);
-        checkUrl(window.location.hostname, 'checkResponse2', 2);
-        
-        //Listener are necessary because all scripts are blocked. This is the easiest way.
-        document.getElementById("btnok").addEventListener("click", reload);
-        document.getElementById("btnko").addEventListener("click", report);
-
-
-        //Listener to notify False Positive Domain
-        function notFalse(){
-            const CORRECTION_URL ="http://www.cm-innovationlab.it:5000/api/v2/url/correction";		//This is the API on my website to add new page in "white list"
-    
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open('POST', CORRECTION_URL, true);
-        
-            xmlhttp.onreadystatechange = function() {
-        
-                if (this.readyState == 4 && this.status == 200) {
-                    
-                    var obj = JSON.parse(xmlhttp.response);
-                    myArrayReliableListFromJson = obj.reliableList;
-                    myArrayMalicoiusListFromJson = obj.maliciousList;
-        
-                    alert("Restarting your browser you can see correctly this page.");
-    
-                    document.head.innerHTML = originalHead;
-                    document.body.innerHTML = originalBody;
-    
-                }else if (this.status >= 500) {
-                    console.log("[SERVER ERROR]:" + xmlhttp.response);
-                }else if (this.status >= 400) {
-                    console.log("[CLIENT ERROR]:" + xmlhttp.response);
+            if (!getReliableList().includes(predictionArgument)){
+                if (getMaliciousList().includes(predictionArgument)){ 
+                    worstOption("malicious");
+                }else if (prediction >= 0.50){ 
+                    worstOption("prediction");
+                }else{ 
+                    minorOption();
                 }
-            };
-            xmlhttp.onerror = function() {
-                console.log(xmlhttp.error);
-            };
-            xmlhttp.setRequestHeader("Content-Type", "application/json");
-            xmlhttp.send(JSON.stringify({ "add": window.location.hostname.replace("www.", "") }));
-        }
 
-        document.getElementById("falsePositive").addEventListener("click", notFalse);
-    }
+                resultTable =    "<table>" +
+                                    "<tr>";
+                if (prediction <= 0.50){
+                    resultTable +=       "<td><img id='check_img' alt='NoGreenTick' src='" + browser.runtime.getURL('images/green.png') + "'/></td>" +
+                                        "<td>" + prediction + "</td>";
+
+                    document.getElementById("btnok").style.display = "none";
+                    if (!getMaliciousList().includes(predictionArgument)){
+                        if (!getReliableList().includes(predictionArgument)){
+                            document.getElementById("btnok").style.display = "inline";
+                        }
+                    }
+                    document.getElementById("btnfp").style.display = "none";
+                    document.getElementById("btnko").style.display = "none";
+                }else if (prediction <= 0.70){
+                    resultTable +=       "<td><img id='check_img' alt='NoOrangeTick' src='" + browser.runtime.getURL('images/orange.png') + "'/></td>" +
+                                        "<td>" + prediction + "</td>";
+
+                    if (!getReliableList().includes(predictionArgument) && !getMaliciousList().includes(predictionArgument)){
+                        document.getElementById("btnok").style.display = "inline";
+                        document.getElementById("btnfp").style.display = "none";
+                        document.getElementById("btnko").style.display = "inline";
+                    }else if (!getReliableList().includes(predictionArgument) && getMaliciousList().includes(predictionArgument)){
+                        document.getElementById("btnok").style.display = "none";
+                        document.getElementById("btnfp").style.display = "inline";
+                        document.getElementById("btnko").style.display = "none";
+                    }else{
+                        document.getElementById("btnok").style.display = "none";
+                        document.getElementById("btnfp").style.display = "none";
+                        document.getElementById("btnko").style.display = "none";
+                    }
+                }else{
+                    resultTable +=       "<td><img id='check_img' alt='NoRedTick' src='" + browser.runtime.getURL('images/red.png') + "'/></td>" +
+                                        "<td>" + prediction + "</td>";
+
+                    document.getElementById("btnok").style.display = "none";
+                    document.getElementById("btnfp").style.display = "none";
+                    document.getElementById("btnko").style.display = "none";
+                    if (!getReliableList().includes(predictionArgument)){
+                        document.getElementById("btnfp").style.display = "inline";
+                        if (!getMaliciousList().includes(predictionArgument)){
+                            document.getElementById("btnko").style.display = "inline";
+                        }
+                    }
+                }
+                resultTable +=       "</tr>" +
+                                "</table>";
+
+                document.getElementById("checkResponse").innerHTML = resultTable;
+            }
+
+        }else if (this.status >= 500) {
+			console.log("[SERVER ERROR]:" + xmlhttp.response);
+        }else if (this.status >= 400) {
+			console.log("[CLIENT ERROR]:" + xmlhttp.response);
+        }
+    };
+    xmlhttp.onerror = function() {
+        console.log(xmlhttp.error);
+    };
+	xmlhttp.setRequestHeader("Content-Type", "application/json");
+    xmlhttp.send(JSON.stringify({ "domain" : predictionArgument }));
 }

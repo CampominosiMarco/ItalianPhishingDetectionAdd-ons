@@ -1,14 +1,16 @@
 {
 	"manifest_version": 2,
     "name": "Italian Phishing Detection",
-    "version": "2.0",
-    "description": "This Add-ons was developed by Marco Campominosi for an Experimental Thesis at Guglielmo Marconi University (https://www.unimarconi.it/). Speaker Prof. Petito with the use of Machine Learning model developed by Dr. Ranaldi.",
+    "version": "2.2",
+    "description": "This Add-ons was developed by Marco Campominosi for an Experimental Thesis at Guglielmo Marconi University (https://www.unimarconi.it/). Speaker Prof. Petito with the use of Machine Learning model developed by Prof. Ranaldi.",
 
 	"browser_action": {
 		"default_icon": {
 			"16": "images/logo(16px).png",
 			"32": "images/logo(32px).png"
-		}
+		},
+		"default_title": "Italian Phishing Detection",
+		"default_popup": "popup/popup.html"
 	},
 
     "icons": {
@@ -18,14 +20,12 @@
         "96": "images/logo(96px).png"
       },
 
-
     "content_scripts": [
 		{
 			"matches": ["<all_urls>"],
-			"js": ["analysis_and_check.js"]
+			"js": ["path.js", "timer.js", "serverListsActions.js", "analysis_and_check.js"]
 		}
     ],
-
 
 	"permissions": [
 		"webRequest",
@@ -33,13 +33,13 @@
 		"<all_urls>"
 	],
 
-
 	"background": {
-		"scripts": ["background_block.js"]
+		"scripts": ["path.js", "timer.js", "serverListsActions.js", "background_block.js"]
 	},
 
 	"web_accessible_resources": [
 		"images/*",
+		"popup/*",
 		"style.css"
 	]
  }

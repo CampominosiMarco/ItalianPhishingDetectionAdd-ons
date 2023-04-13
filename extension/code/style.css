@@ -83,9 +83,13 @@ button {
 }
 
 button.ok {
-    background-color: blue;
+    background-color: green;
 }
 
 button.ko {
     background-color: red;
+}
+
+button.fp {
+    background-color: blue;
 }

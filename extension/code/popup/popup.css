@@ -1,0 +1,13 @@
+html, body {
+  width: 300px;
+}
+
+a {
+  color: green;
+  width: 300px;
+  font-weight: bold;
+}
+
+h3 {
+	color: green;
+}

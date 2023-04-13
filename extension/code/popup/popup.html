@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <link rel="stylesheet" href="../style.css"/>
+    <link rel="stylesheet" href="popup.css"/>
+    <title>Italian Phishing Detection PopUp</title>
+  </head>
+
+  <body>
+
+      <ul>
+        <li style="text-align: left;"><a href="https://github.com/CampominosiMarco/ItalianPhishingDetectionAdd-ons">GitHub Repository</a></li>
+      </ul>
+
+      
+      <hr style="height:3px; color:green; width:100%; background-color:green">
+      
+      <h3>Get a custom prediction on:</h3>
+
+      <input type="text" id="inputURL" name="inputURL" style="text-align:center; width:'250px'">
+      <input type="button" id="startPrediction" title="Get prediction." value="Check">
+
+      <br/><br/>
+
+      <div id="checkResponsePopup">.:. Machine Learning Model Response .:.</div>
+
+      <br/><br/>
+
+      <button class="ok" id="btnokPopup" title="If you are sure, you can add this domain as reliable." style="display:none;">Add as Reliable</button>
+      <button class="fp" id="btnfpPopup" title="With this button you can report a FALSE POSITIVE domain!" style="display:none;">Report as F.P.</button>
+      <button class="ko" id="btnkoPopup" title="With this button you can report a malicious domain!" style="display:none;">Report as Malicious</button>
+
+      <br/><br/>
+
+      <div id="textReport"></div>
+
+    <script src="../path.js"></script>
+    <script src="../serverListsActions.js"></script>
+    <script src="popup.js"></script>
+
+  </body>
+</html>
