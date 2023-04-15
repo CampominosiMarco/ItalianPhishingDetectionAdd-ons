@@ -9,7 +9,6 @@ Firefox add-ons for phishing detection using Machine Learning Model:
 ![add example](https://user-images.githubusercontent.com/22752092/232186949-9cf0634f-76d2-4531-a1bd-c85ab115ac69.JPG)</br>
 .:. To add URL in black list @ <a href="http://www.cm-innovationlab.it:5000/api/v2/url/bad">/api/v2/url/bad</a></br>
 .:. To correct a false positive URL from black to white list @ <a href="http://www.cm-innovationlab.it:5000/api/v2/url/correction">/api/v2/url/correction</a></br>
-<hr>
 <u>.:. GET Methods .:.</u></br>
 .:. To get JSON array containing white list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/reliable">/api/v2/list/reliable</a></br>
 .:. To get JSON array containing black list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/malicious">/api/v2/list/malicious</a></br>
