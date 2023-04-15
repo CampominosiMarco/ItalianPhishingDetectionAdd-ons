@@ -42,3 +42,8 @@ function updateLists() {
 
 //This listener is le last chance to refresh reliable list
 browser.windows.onFocusChanged.addListener(updateLists);
+
+//This is a brute force solution to bypass cache in case f problems with refresh
+function forceReload() {
+	browser.tabs.reload({bypassCache: true});
+}

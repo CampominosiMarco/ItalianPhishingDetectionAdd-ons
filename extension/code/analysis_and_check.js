@@ -106,6 +106,7 @@ var extensionCheck =    "<b>Domain Name Check</b> (" + domainOnly + ")" +
                         "<br/><br/>" +
 
                         "<button class='ok' id='btnok' title='If you are sure, you can add this domain as reliable.'>Add as Reliable</button>" +
+                        "<button class='tp' id='btntp' title='With this button you can report a TRUE POSITIVE domain!'>Report as True Positive</button>" +
                         "<button class='fp' id='btnfp' title='With this button you can report a FALSE POSITIVE domain!'>Report as False Positive</button>" +
                         "<button class='ko' id='btnko' title='With this button you can report a malicious domain!'>Report as Malicious</button>";
 
@@ -141,12 +142,14 @@ function worstOption(type){
                                 "</html>";
     
     document.getElementById("btnok").style.display = "none";
+    document.getElementById("btntp").style.display = "none";
     document.getElementById("btnfp").style.display = "none";
     document.getElementById("btnko").style.display = "none";
 
     
     //Listener are necessary because all scripts are blocked. This is the easiest way.
     document.getElementById("btnok").addEventListener("click", reportAsSafe);
+    document.getElementById("btntp").addEventListener("click", reportAsMalicious);
     document.getElementById("btnfp").addEventListener("click", falsePositive);
     document.getElementById("btnko").addEventListener("click", reportAsMalicious);
 
@@ -173,12 +176,14 @@ function minorOption(){
                                 "</html>";
     
     document.getElementById("btnok").style.display = "none";
+    document.getElementById("btntp").style.display = "none";
     document.getElementById("btnfp").style.display = "none";
     document.getElementById("btnko").style.display = "none";
 
     
     //Listener are necessary because all scripts are blocked. This is the easiest way.
     document.getElementById("btnok").addEventListener("click", reportAsSafe);
+    document.getElementById("btntp").addEventListener("click", reportAsMalicious);
     document.getElementById("btnfp").addEventListener("click", falsePositive);
     document.getElementById("btnko").addEventListener("click", reportAsMalicious);
 
@@ -186,30 +191,30 @@ function minorOption(){
 
 //With this function we add site to whiteList
 function reportAsSafe(){
-    if(prediction < 0.70){
+ //   if(prediction < 0.70){
         notifyReliableDomain(domainOnly);
-        alert("Domain correctly identified as 'safe'.");
+        alert("Domain correctly identified as 'safe'.\nIf you have problem refreshing page, please use 'Reload bypassing cache' function in popup menu.");
         window.location.reload();  
-    }else{
-        alert("Results is greater than 0.70, so you can't identify this url as 'safe'.");
-    }
+ //   }else{
+ //       alert("Results is greater than 0.70, so you can't identify this url as 'safe'.");
+ //   }
 }
 
 //With this function we add site to blackList
 function reportAsMalicious(){
-    if(prediction > 0.50){
+///    if(prediction > 0.50){
         notifyMaliciousDomain(domainOnly);
-        alert("Domain correctly identified as 'malicious'.");
+        alert("Domain correctly identified as 'malicious'.\nIf you have problem refreshing page, please use 'Reload bypassing cache' function in popup menu.");
         window.location.reload();
-    }else{
-        alert("Results is less than 0.50, so you can't identify this url as 'malicious'.");
-    }
+//    }else{
+//        alert("Results is less than 0.50, so you can't identify this url as 'malicious'.");
+//    }
 }
 
 //With this function we correct url from malicious to reliable list (only if prediction >0.70)
 function falsePositive(){
     correctionFromMaliciousToReliable(domainOnly);
-    alert("Domain correctly identified as 'false positive'.");
+    alert("Domain correctly identified as 'false positive'.\nIf you have problem refreshing page, please use 'Reload bypassing cache' function in popup menu.");
     window.location.reload();
 }
 
@@ -245,27 +250,34 @@ function inference(predictionArgument){
                                         "<td>" + prediction + "</td>";
 
                     document.getElementById("btnok").style.display = "none";
+                    document.getElementById("btntp").style.display = "none";
+                    document.getElementById("btnfp").style.display = "none";
+                    document.getElementById("btnko").style.display = "none";
                     if (!getMaliciousList().includes(predictionArgument)){
                         if (!getReliableList().includes(predictionArgument)){
                             document.getElementById("btnok").style.display = "inline";
+                            document.getElementById("btntp").style.display = "inline";
                         }
+                    }else{
+                        document.getElementById("btnfp").style.display = "inline";
                     }
-                    document.getElementById("btnfp").style.display = "none";
-                    document.getElementById("btnko").style.display = "none";
                 }else if (prediction <= 0.70){
                     resultTable +=       "<td><img id='check_img' alt='NoOrangeTick' src='" + browser.runtime.getURL('images/orange.png') + "'/></td>" +
                                         "<td>" + prediction + "</td>";
 
                     if (!getReliableList().includes(predictionArgument) && !getMaliciousList().includes(predictionArgument)){
                         document.getElementById("btnok").style.display = "inline";
+                        document.getElementById("btntp").style.display = "none";
                         document.getElementById("btnfp").style.display = "none";
                         document.getElementById("btnko").style.display = "inline";
                     }else if (!getReliableList().includes(predictionArgument) && getMaliciousList().includes(predictionArgument)){
                         document.getElementById("btnok").style.display = "none";
+                        document.getElementById("btntp").style.display = "none";
                         document.getElementById("btnfp").style.display = "inline";
                         document.getElementById("btnko").style.display = "none";
                     }else{
                         document.getElementById("btnok").style.display = "none";
+                        document.getElementById("btntp").style.display = "none";
                         document.getElementById("btnfp").style.display = "none";
                         document.getElementById("btnko").style.display = "none";
                     }
@@ -274,6 +286,7 @@ function inference(predictionArgument){
                                         "<td>" + prediction + "</td>";
 
                     document.getElementById("btnok").style.display = "none";
+                    document.getElementById("btntp").style.display = "none";
                     document.getElementById("btnfp").style.display = "none";
                     document.getElementById("btnko").style.display = "none";
                     if (!getReliableList().includes(predictionArgument)){

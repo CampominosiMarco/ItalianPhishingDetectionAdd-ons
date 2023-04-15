@@ -90,6 +90,6 @@ button.ko {
     background-color: red;
 }
 
-button.fp {
+button.fp, button.tp {
     background-color: blue;
 }
