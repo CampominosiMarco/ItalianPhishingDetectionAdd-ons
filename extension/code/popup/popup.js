@@ -24,27 +24,34 @@ function popUpCheck(predictionArgument, destination){
                                 "<td>" + predictionPopUp + "</td>";
 
                 document.getElementById("btnokPopup").style.display = "none";
+                document.getElementById("btntpPopup").style.display = "none";
+                document.getElementById("btnfpPopup").style.display = "none";
+                document.getElementById("btnkoPopup").style.display = "none";
                 if (!getMaliciousList().includes(predictionArgument)){
                     if (!getReliableList().includes(predictionArgument)){
                         document.getElementById("btnokPopup").style.display = "inline";
+                        document.getElementById("btntpPopup").style.display = "inline";
                     }
+                }else{
+                    document.getElementById("btnfpPopup").style.display = "inline";
                 }
-                document.getElementById("btnfpPopup").style.display = "none";
-                document.getElementById("btnkoPopup").style.display = "none";
             }else if (predictionPopUp <= 0.70){
                 output +=       "<td style='min-width:20px;'><img id='check_img' alt='NoOrangeTick' src='" + browser.runtime.getURL('images/orange.png') + "'/></td>" +
                                 "<td>" + predictionPopUp + "</td>";
 
                 if (!getReliableList().includes(predictionArgument) && !getMaliciousList().includes(predictionArgument)){
                     document.getElementById("btnokPopup").style.display = "inline";
+                    document.getElementById("btntpPopup").style.display = "none";
                     document.getElementById("btnfpPopup").style.display = "none";
                     document.getElementById("btnkoPopup").style.display = "inline";
                 }else if (!getReliableList().includes(predictionArgument) && getMaliciousList().includes(predictionArgument)){
                     document.getElementById("btnokPopup").style.display = "none";
+                    document.getElementById("btntpPopup").style.display = "none";
                     document.getElementById("btnfpPopup").style.display = "inline";
                     document.getElementById("btnkoPopup").style.display = "none";
                 }else{
                     document.getElementById("btnokPopup").style.display = "none";
+                    document.getElementById("btntpPopup").style.display = "none";
                     document.getElementById("btnfpPopup").style.display = "none";
                     document.getElementById("btnkoPopup").style.display = "none";
                 }
@@ -53,6 +60,7 @@ function popUpCheck(predictionArgument, destination){
                                 "<td>" + predictionPopUp + "</td>";
 
                 document.getElementById("btnokPopup").style.display = "none";
+                document.getElementById("btntpPopup").style.display = "none";
                 document.getElementById("btnfpPopup").style.display = "none";
                 document.getElementById("btnkoPopup").style.display = "none";
                 if (!getReliableList().includes(predictionArgument)){
@@ -96,6 +104,7 @@ function evaluation(){
         
         if (!originalURL.match(regex)) {
             document.getElementById("btnokPopup").style.display = "none";
+            document.getElementById("btntpPopup").style.display = "none";
             document.getElementById("btnfpPopup").style.display = "none";
             document.getElementById("btnkoPopup").style.display = "none";
             document.getElementById("checkResponsePopup").innerHTML = "Attention! Please insert a valid URL.";
@@ -125,26 +134,26 @@ document.getElementById("inputURL").addEventListener("change", evaluation);
 
 //With this function we add site to blackList
 function reportAsMalicious(){
-    if(predictionPopUp > 0.50 && lastPredictionArgument == document.getElementById("inputURL").title){
+ //   if(predictionPopUp > 0.50 && lastPredictionArgument == document.getElementById("inputURL").title){
 
-         notifyMaliciousDomain(lastPredictionArgument);
-
+        notifyMaliciousDomain(lastPredictionArgument);
         document.getElementById("textReport").innerHTML = "Domain correctly identified as 'malicious'.";
-    }else if (predictionPopUp < 0.50){
-        document.getElementById("textReport").innerHTML = "Results is less than 0.50, so you can't identify this url as 'malicious'.";
-    }
+
+ //   }else if (predictionPopUp < 0.50){
+ //       document.getElementById("textReport").innerHTML = "Results is less than 0.50, so you can't identify this url as 'malicious'.";
+ //   }
 }
 
 //With this function we add site to whiteList
 function reportAsSafe(){
-    if(predictionPopUp < 0.70 && lastPredictionArgument == document.getElementById("inputURL").title){
+  //  if(predictionPopUp < 0.70 && lastPredictionArgument == document.getElementById("inputURL").title){
 
         notifyReliableDomain(lastPredictionArgument);
-
         document.getElementById("textReport").innerHTML = "Domain correctly identified as 'safe'.";
-    }else if (predictionPopUp > 0.70){
-        document.getElementById("textReport").innerHTML = "Results is greater than 0.70, so you can't identify this url as 'safe'.";
-    }
+
+  //  }else if (predictionPopUp > 0.70){
+  //      document.getElementById("textReport").innerHTML = "Results is greater than 0.70, so you can't identify this url as 'safe'.";
+  //  }
 }
 
 //With this function we correct url from malicious to reliable list (only if prediction >0.70)
@@ -155,5 +164,9 @@ function falsePositive(){
 
 //Listener on button
 document.getElementById("btnokPopup").addEventListener("click", reportAsSafe);
+document.getElementById("btntpPopup").addEventListener("click", reportAsMalicious);
 document.getElementById("btnfpPopup").addEventListener("click", falsePositive);
 document.getElementById("btnkoPopup").addEventListener("click", reportAsMalicious);
+
+//Listener on list to force refresh without cache
+document.getElementById("forceReload").addEventListener("click", forceReload);

@@ -9,33 +9,43 @@
 
   <body>
 
-      <ul>
-        <li style="text-align: left;"><a href="https://github.com/CampominosiMarco/ItalianPhishingDetectionAdd-ons">GitHub Repository</a></li>
-      </ul>
+    <ul>
+      <li style="text-align: left; list-style-type: square;" title="To see project and source code."><a href="https://github.com/CampominosiMarco/ItalianPhishingDetectionAdd-ons">GitHub Repository</a></li>
+      <li style="text-align: left;" title="To get only reliable list."><a href="http://www.cm-innovationlab.it:5000/api/v2/list/reliable">Reliable list (JSON)</a></li>
+      <li style="text-align: left;" title="To get only malicious list."><a href="http://www.cm-innovationlab.it:5000/api/v2/list/malicious">Malicious list (JSON)</a></li>
+      <li style="text-align: left;" title="To get all lists."><a href="http://www.cm-innovationlab.it:5000/api/v2/list/all">All lists (JSON)</a></li>
+    </ul>
 
-      
-      <hr style="height:3px; color:green; width:100%; background-color:green">
-      
-      <h3>Get a custom prediction on:</h3>
+    <hr style="height:3px; color:green; width:100%; background-color:green">
+    
+    <ul>
+      <li style="text-align: left;" title="If you have problems updating pages!"><a href="" id="forceReload" style="color:blue;">Reload bypassing cache</a></li>
+    </ul>
 
-      <input type="text" id="inputURL" name="inputURL" style="text-align:center; width:'250px'">
-      <input type="button" id="startPrediction" title="Get prediction." value="Check">
+    <hr style="height:3px; color:green; width:100%; background-color:green">
 
-      <br/><br/>
+    <h3>Get a custom prediction on:</h3>
 
-      <div id="checkResponsePopup">.:. Machine Learning Model Response .:.</div>
+    <input type="text" id="inputURL" name="inputURL" style="text-align:center; width:'250px'">
+    <input type="button" id="startPrediction" title="Get prediction." value="Check">
 
-      <br/><br/>
+    <br/><br/>
 
-      <button class="ok" id="btnokPopup" title="If you are sure, you can add this domain as reliable." style="display:none;">Add as Reliable</button>
-      <button class="fp" id="btnfpPopup" title="With this button you can report a FALSE POSITIVE domain!" style="display:none;">Report as F.P.</button>
-      <button class="ko" id="btnkoPopup" title="With this button you can report a malicious domain!" style="display:none;">Report as Malicious</button>
+    <div id="checkResponsePopup">.:. Machine Learning Model Response .:.</div>
 
-      <br/><br/>
+    <br/><br/>
 
-      <div id="textReport"></div>
+    <button class="ok" id="btnokPopup" title="If you are sure, you can add this domain as reliable." style="display:none;">Add as Reliable</button>
+    <button class="tp" id="btntpPopup" title="With this button you can report a TRUE POSITIVE domain!" style="display:none;">Report as T.P.</button>
+    <button class="fp" id="btnfpPopup" title="With this button you can report a FALSE POSITIVE domain!" style="display:none;">Report as F.P.</button>
+    <button class="ko" id="btnkoPopup" title="With this button you can report a malicious domain!" style="display:none;">Report as Malicious</button>
+
+    <br/><br/>
+
+    <div id="textReport"></div>
 
     <script src="../path.js"></script>
+    <script src="../background_block.js"></script>
     <script src="../serverListsActions.js"></script>
     <script src="popup.js"></script>
 
