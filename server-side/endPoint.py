@@ -94,8 +94,9 @@ def correction():
         siteToAdd = request.get_json()
 
         reliableList.append(siteToAdd["add"])
-        maliciousList.remove(siteToAdd["add"])
         falsePositiveList.append(siteToAdd["add"])
+        if siteToAdd["add"] in maliciousList:
+            maliciousList.remove(siteToAdd["add"])
 
         return {"reliableList": reliableList, "maliciousList": maliciousList}, 200
     
