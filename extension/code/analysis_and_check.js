@@ -140,19 +140,6 @@ function worstOption(type){
 
                                 "<br/><br/><br/>" +
                                 "</html>";
-    
-    document.getElementById("btnok").style.display = "none";
-    document.getElementById("btntp").style.display = "none";
-    document.getElementById("btnfp").style.display = "none";
-    document.getElementById("btnko").style.display = "none";
-
-    
-    //Listener are necessary because all scripts are blocked. This is the easiest way.
-    document.getElementById("btnok").addEventListener("click", reportAsSafe);
-    document.getElementById("btntp").addEventListener("click", reportAsMalicious);
-    document.getElementById("btnfp").addEventListener("click", falsePositive);
-    document.getElementById("btnko").addEventListener("click", reportAsMalicious);
-
 }
 
 //This is the minor option
@@ -174,19 +161,6 @@ function minorOption(){
 
                                 "<br/><br/><br/>" +
                                 "</html>";
-    
-    document.getElementById("btnok").style.display = "none";
-    document.getElementById("btntp").style.display = "none";
-    document.getElementById("btnfp").style.display = "none";
-    document.getElementById("btnko").style.display = "none";
-
-    
-    //Listener are necessary because all scripts are blocked. This is the easiest way.
-    document.getElementById("btnok").addEventListener("click", reportAsSafe);
-    document.getElementById("btntp").addEventListener("click", reportAsMalicious);
-    document.getElementById("btnfp").addEventListener("click", falsePositive);
-    document.getElementById("btnko").addEventListener("click", reportAsMalicious);
-
 }
 
 //With this function we add site to whiteList
@@ -242,6 +216,18 @@ function inference(predictionArgument){
                 }else{ 
                     minorOption();
                 }
+                
+                //Standard settings
+                document.getElementById("btnok").style.display = "none";
+                document.getElementById("btntp").style.display = "none";
+                document.getElementById("btnfp").style.display = "none";
+                document.getElementById("btnko").style.display = "none";
+                
+                //Listener are necessary because all scripts are blocked. This is the easiest way.
+                document.getElementById("btnok").addEventListener("click", reportAsSafe);
+                document.getElementById("btntp").addEventListener("click", reportAsMalicious);
+                document.getElementById("btnfp").addEventListener("click", falsePositive);
+                document.getElementById("btnko").addEventListener("click", reportAsMalicious);
 
                 resultTable =    "<table>" +
                                     "<tr>";
