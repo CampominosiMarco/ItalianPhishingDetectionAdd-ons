@@ -170,3 +170,8 @@ document.getElementById("btnkoPopup").addEventListener("click", reportAsMaliciou
 
 //Listener on list to force refresh without cache
 document.getElementById("forceReload").addEventListener("click", forceReload);
+
+//This is a brute force solution to bypass cache in case of problems with refresh
+function forceReload() {
+	browser.tabs.reload({bypassCache: true});
+}
