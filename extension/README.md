@@ -4,3 +4,4 @@ Update 12-02-2023: Now is available version 1.0 @<a href="https://addons.mozilla
 Update 05-04-2023: Version 2.0 is now available at the same link.</br>
 Update 12-04-2023: Version 2.2 is now available at the same link.</br>
 Update 15-04-2023: Version 2.3 is now available at the same link.</br>
+Update 23-04-2023: Version 2.4 is now available at the same link.</br>
