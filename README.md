@@ -5,11 +5,6 @@ Firefox add-ons for phishing detection using Machine Learning Model:
 <ins>.:. POST Methods .:.</ins></br>
 .:. To get prediction for URL @ <a href="http://www.cm-innovationlab.it:5000/api/v2/url/inference">/api/v2/url/inference</a></br></br>
 ![inference example](https://user-images.githubusercontent.com/22752092/232186853-f4b4d451-0010-4a46-b61a-de5ac7bc0875.JPG)</br>
-  ```
-{
-  "domain": "google.com"
-}
-  ```
 .:. To add URL in white list @ <a href="http://www.cm-innovationlab.it:5000/api/v2/url/add">/api/v2/url/add</a></br></br>
 ![add example](https://user-images.githubusercontent.com/22752092/232186949-9cf0634f-76d2-4531-a1bd-c85ab115ac69.JPG)</br>
 .:. To add URL in black list @ <a href="http://www.cm-innovationlab.it:5000/api/v2/url/bad">/api/v2/url/bad</a></br>
@@ -19,3 +14,8 @@ Firefox add-ons for phishing detection using Machine Learning Model:
 .:. To get JSON array containing black list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/malicious">/api/v2/list/malicious</a></br>
 .:. To get JSON array containing false positive list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/fp">/api/v2/list/fp</a></br>
 .:. To get JSON arrays containing black / white / false positive list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/all">/api/v2/list/all</a>
+  ```
+{
+  "domain": "google.com"
+}
+  ```
