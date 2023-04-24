@@ -16,6 +16,6 @@ Firefox add-ons for phishing detection using Machine Learning Model:
 .:. To get JSON arrays containing black / white / false positive list of domain @ <a href="http://www.cm-innovationlab.it:5000/api/v2/list/all">/api/v2/list/all</a>
   ```
   {
-  "domain": "google.com"
+    "domain": "google.com"
   }
   ```
