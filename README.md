@@ -1,4 +1,4 @@
-# Estensione Firefox per rilevamento di phishing
+# Estensione Firefox per rilevamento di phishing con modello di machine learning
 
 Con questo progetto viene sviluppata un'[**estensione**](https://addons.mozilla.org/it/firefox/addon/italian-phishing-detection/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search) per Firefox che aiuta l'utente a contrastare attacchi di **phishing** servendosi delle predizioni di un **modello di machine learning**. L'idea nasce dal capitolo 5 del [paper](https://ceur-ws.org/Vol-3260/paper13.pdf) e utilizza il [modello di Machine Learning](https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb) creato dal Prof. [Leonardo Ranaldi](https://github.com/LeonardRanaldi/).
 
@@ -113,11 +113,11 @@ RESPONSE { "reliableList": "['google.it',...]",
 
 ---
 
-# Phishing Detection Add-ons for Firefox
+# Phishing Detection Add-ons for Firefox with machine learning model
 
 With this project, an [**extension**](https://addons.mozilla.org/it/firefox/addon/italian-phishing-detection/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search) for Firefox is developed to help users to against **phishing** attacks using the predictions of a **machine learning model**. The idea comes from chapter 5 of the [paper](https://ceur-ws.org/Vol-3260/paper13.pdf) and uses the [Machine Learning model](https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb) created by Prof. [Leonardo Ranaldi](https://github.com/LeonardRanaldi/).
 
-how does it **work**:
+How does it **work**:
 
 *   At browser opening, the extension asks an endpoint on server for the list of legitimate sites.
 *   When user wants to view a page, the extension checks if the domain is included in the list.
