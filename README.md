@@ -17,3 +17,11 @@ Firefox add-ons for phishing detection using Machine Learning Model:
   ```
   POST { "domain" : "google.com" } --> RESPONSE { "predict": "0.123456789" }
   ```
+<b>Tutorial:</b>
+
+<ul>
+<li><a href="https://www.cm-innovationlab.it/1%20-%20Installazione.mp4">Installazione / Installation</a></li>
+<li><a href="https://www.cm-innovationlab.it/2%20-%20Link%20popup.mp4">Popup Link</a></li>
+<li><a href="https://www.cm-innovationlab.it/3%20-%20Dominio%20Legittimo.mp4">Dominio Legittimo / Reliable Domain</a></li>
+<li><a href="https://www.cm-innovationlab.it/4%20-%20Dominio%20Malevolo.mp4">Dominio Malevolo / Malicious Domain</a></li>
+</ul>
