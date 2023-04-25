@@ -1,6 +1,6 @@
 ## Estensione Firefox per rilevamento di phishing
 
-Con questo progetto viene sviluppata un'**estensione** per Firefox che aiuta l'utente a contrastare attacchi di **phishing** servendosi delle predizioni di un **modello di machine learning**. L'idea nasce dal capitolo 5 del [paper](https://ceur-ws.org/Vol-3260/paper13.pdf) e utilizza il [modello di Machine Learning](https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb) creato dal Prof. [Leonardo Ranaldi](https://github.com/LeonardRanaldi/).
+Con questo progetto viene sviluppata un'[**estensione**](https://addons.mozilla.org/it/firefox/addon/italian-phishing-detection/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search) per Firefox che aiuta l'utente a contrastare attacchi di **phishing** servendosi delle predizioni di un **modello di machine learning**. L'idea nasce dal capitolo 5 del [paper](https://ceur-ws.org/Vol-3260/paper13.pdf) e utilizza il [modello di Machine Learning](https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb) creato dal Prof. [Leonardo Ranaldi](https://github.com/LeonardRanaldi/).
 
 Il suo **funzionamento** è il seguente:
 
