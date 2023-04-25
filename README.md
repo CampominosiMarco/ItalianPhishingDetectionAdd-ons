@@ -1,4 +1,4 @@
-## Estensione Firefox per rilevamento di phishing
+# Estensione Firefox per rilevamento di phishing
 
 Con questo progetto viene sviluppata un'[**estensione**](https://addons.mozilla.org/it/firefox/addon/italian-phishing-detection/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search) per Firefox che aiuta l'utente a contrastare attacchi di **phishing** servendosi delle predizioni di un **modello di machine learning**. L'idea nasce dal capitolo 5 del [paper](https://ceur-ws.org/Vol-3260/paper13.pdf) e utilizza il [modello di Machine Learning](https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb) creato dal Prof. [Leonardo Ranaldi](https://github.com/LeonardRanaldi/).
 
@@ -91,9 +91,102 @@ RESPONSE { "reliableList": "['google.it',...]",
 
 ---
 
-## Video Tutorial:
+# Video Tutorial:
 
 *   [Installazione / Installation](https://www.cm-innovationlab.it/1%20-%20Installazione.mp4)
 *   [Popup Link](https://www.cm-innovationlab.it/2%20-%20Link%20popup.mp4)
 *   [Dominio Legittimo / Reliable Domain](https://www.cm-innovationlab.it/3%20-%20Dominio%20Legittimo.mp4)
 *   [Dominio Malevolo / Malicious Domain](https://www.cm-innovationlab.it/4%20-%20Dominio%20Malevolo.mp4)
+
+---
+
+# Phishing Detection Add-ons for Firefox
+
+With this project, an [**extension**](https://addons.mozilla.org/it/firefox/addon/italian-phishing-detection/?utm_source=addons.mozilla.org&utm_medium=referral&utm_content=search) for Firefox is developed to help users to against **phishing** attacks using the predictions of a **machine learning model**. The idea comes from chapter 5 of the [paper](https://ceur-ws.org/Vol-3260/paper13.pdf) and uses the [Machine Learning model](https://github.com/LeonardRanaldi/ItalianPhishingDetection/blob/main/models/RNN%20word%2Bchar_emb.ipynb) created by Prof. [Leonardo Ranaldi](https://github.com/LeonardRanaldi/).
+
+how does it **work**:
+
+*   At browser opening, the extension asks an endpoint on server for the list of legitimate sites.
+*   When user wants to view a page, the extension checks if the domain is included in the list.
+    1.  If so, the system allows the correct visualization of the site.
+    2.  If, on the other hand, it is not among the controlled domains, it proceeds to block the page content with the relative scripts, asking the model for an evaluation of the URL.
+        1.  If the prediction has a value lower than 0.5, the extension will display a page for user confirmation.
+        2.  If the prediction is between 0.5 and 0.7, we are in a delicate range where there may be false positives and therefore the user is asked to validate the data with another screen.
+        3.  Finally, in the case of evaluation greater than 0.7, the options are between real threat and false positive.
+
+Each choice by the user is transmitted to the server which must update its lists.
+
+The extension also offers a popup to make inferences on the model, add domains to the lists and consult the data on the server.
+
+---
+
+## Endpoint:
+
+Active endpoints on server accept requests beyond the extension, as long as respect the following formats:
+
+#### GET Methods
+
+*   To get JSON array with white list domains @ [/api/v2/list/reliable](http://www.cm-innovationlab.it:5000/api/v2/list/reliable)
+
+```javascript
+{ "reliableList": "['google.it','cm-innovationlab.it']" }
+```
+
+*   To get JSON array with black list domains @ [/api/v2/list/malicious](http://www.cm-innovationlab.it:5000/api/v2/list/malicious)
+
+```javascript
+{ "maliciousList": "['google.com','cm-innovationlab.com']" }
+```
+
+*   To get JSON array with false positive list domains @ [/api/v2/list/fp](http://www.cm-innovationlab.it:5000/api/v2/list/fp)
+
+```javascript
+{ "falsePositiveList": "['google.it','cm-innovationlab.it']" }
+```
+
+*   To get JSON array with all lists @ [/api/v2/list/all](http://www.cm-innovationlab.it:5000/api/v2/list/all)
+
+```javascript
+{ "reliableList": "['google.it','cm-innovationlab.it']",
+  "maliciousList": "['google.com','cm-innovationlab.com']",
+  "falsePositiveList": "['google.it','cm-innovationlab.it']" }  
+```
+
+#### POST Methods
+
+*   To get prediction from model @ [/api/v2/url/inference](http://www.cm-innovationlab.it:5000/api/v2/url/inference)
+
+```javascript
+POST { "domain" : "google.com" }
+RESPONSE { "predict": "0.123456789" }
+```
+
+*   To add domain in reliable list @ [/api/v2/url/add](http://www.cm-innovationlab.it:5000/api/v2/url/add)
+
+```javascript
+POST { "add" : "google.com" }
+RESPONSE { "reliableList": "['google.com',...]" }
+```
+
+*   To add domain in malicious list @ [/api/v2/url/bad](http://www.cm-innovationlab.it:5000/api/v2/url/bad)
+
+```javascript
+POST { "add" : "google.com" }
+RESPONSE { "maliciousList": "['google.com',...]" }
+```
+
+*   To correct domain from malicious to reliable list @ [/api/v2/url/correction](http://www.cm-innovationlab.it:5000/api/v2/url/correction)
+
+```javascript
+POST { "add" : "google.com" }
+RESPONSE { "reliableList": "['google.it',...]",
+             "maliciousList": "['google.com',...]" }  
+```
+
+---
+
+## Repository folders:
+
+1.  **extension**: contains all the extension files and an installation guide.
+2.  **model**: contains a Jupyter Notebook file with the model used starting from Prof. Ranaldi's one.
+3.  **server-side**: contains the code to be used on server side with a guide on configuration.
