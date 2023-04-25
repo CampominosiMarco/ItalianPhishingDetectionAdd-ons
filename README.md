@@ -100,14 +100,16 @@ RESPONSE { "reliableList": "['google.it',...]",
 
 ---
 
-# Screeshot:
+# Screeshots:
 
-*   ![Popup](https://user-images.githubusercontent.com/22752092/234303893-72c65e6a-05d8-473b-aa4e-aa2ba6c66508.png)
-*   ![Popup 2](https://user-images.githubusercontent.com/22752092/234303904-cb81cd14-76e1-44f7-bf71-78e22574edf7.png)
-*   ![Popup 3](https://user-images.githubusercontent.com/22752092/234303896-41a3591a-dc76-49d8-ade7-c3c65385bd8a.png)
-*   ![Popup 4](https://user-images.githubusercontent.com/22752092/234303900-bd7e8dd8-6ad4-41ec-8341-a2b373175403.png)
-*   ![ext 1 ko](https://user-images.githubusercontent.com/22752092/234303906-d300e8fd-5ad8-4781-b8b6-06ad5b160d08.png)
-*   ![ext 2 ok](https://user-images.githubusercontent.com/22752092/234303876-edcd04d6-e1bb-4f89-a4f9-d11333fe2b6b.png)
+![Popup](https://user-images.githubusercontent.com/22752092/234303893-72c65e6a-05d8-473b-aa4e-aa2ba6c66508.png)
+![Popup 2](https://user-images.githubusercontent.com/22752092/234303904-cb81cd14-76e1-44f7-bf71-78e22574edf7.png)
+
+![Popup 3](https://user-images.githubusercontent.com/22752092/234303896-41a3591a-dc76-49d8-ade7-c3c65385bd8a.png)
+![Popup 4](https://user-images.githubusercontent.com/22752092/234303900-bd7e8dd8-6ad4-41ec-8341-a2b373175403.png)
+
+![ext 2 ok](https://user-images.githubusercontent.com/22752092/234303876-edcd04d6-e1bb-4f89-a4f9-d11333fe2b6b.png)
+![ext 1 ko](https://user-images.githubusercontent.com/22752092/234303906-d300e8fd-5ad8-4781-b8b6-06ad5b160d08.png)
 
 ---
 
