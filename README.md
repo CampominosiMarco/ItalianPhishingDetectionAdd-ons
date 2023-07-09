@@ -100,7 +100,7 @@ RESPONSE { "reliableList": "['google.it',...]",
 
 ---
 
-# Screeshots:
+# Screenshots:
 
 ![Popup](https://user-images.githubusercontent.com/22752092/234303893-72c65e6a-05d8-473b-aa4e-aa2ba6c66508.png)
 ![Popup 2](https://user-images.githubusercontent.com/22752092/234303904-cb81cd14-76e1-44f7-bf71-78e22574edf7.png)
